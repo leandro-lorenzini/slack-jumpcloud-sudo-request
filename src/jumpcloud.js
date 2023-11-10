@@ -33,7 +33,8 @@ const getAllSudoUsers = async () => {
         },
       }
     );
-    return response.data ? response.data.results : [];
+    return response.data && response.data.results ? 
+      response.data.results : [];
   } catch (error) {
     console.error("Error fetching user data:", error);
     throw error;
