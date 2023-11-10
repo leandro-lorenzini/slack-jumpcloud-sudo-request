@@ -1,9 +1,19 @@
 const express = require("express");
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
+
 const route = require("./src/route");
 const jumpcloud = require("./src/jumpcloud");
 
 const app = express();
 const port = 3000;
+
+// Protect application
+const limiter = rateLimit({
+	windowMs: 10 * 60 * 1000, // 10 minutes
+	limit: 15, // Limit each IP to 10 requests per minute.
+})
+app.use(limiter)
 
 // Needed for slack signing verification
 app.use(
