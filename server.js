@@ -14,6 +14,7 @@ const limiter = rateLimit({
 	limit: 15, // Limit each IP to 10 requests per minute.
 })
 app.use(limiter)
+app.use(helmet());
 
 // Needed for slack signing verification
 app.use(
