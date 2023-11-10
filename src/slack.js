@@ -49,9 +49,8 @@ async function reply(responseUrl, message) {
   // Use axios to POST the message to the response_url
   try {
     await axios.post(responseUrl, messagePayload);
-    console.log(`Confirmation message sent to ${req.body.user_name}`);
   } catch (error) {
-    console.error(`Error sending message to ${req.body.user_name}: `, error);
+    console.error(`Error sending message back to user: `, error);
   }
 }
 
