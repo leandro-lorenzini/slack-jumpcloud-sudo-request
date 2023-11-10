@@ -20,21 +20,21 @@ router.post("/setAdminAccess", slack.verify, async (req, res) => {
   try {
     const userData = await jumpcloud.getSystemUserByUsername(user_name);
     if (!userData || !userData.results || userData.results.length === 0) {
-      reply(req.body.response_url, "Username could not be found, your slack username does not match with a valid JumpCloud user");
+      slack.reply(req.body.response_url, "Username could not be found, your slack username does not match with a valid JumpCloud user");
       return;
     }
 
     const userId = userData.results[0]._id;
 
     jumpcloud.updateUser(userId, true);
-    reply(
+    slack.reply(
       req.body.response_url,
       "Admin access granted for a period of 30 minutes.\nRemember: with great power comes great responsibility."
     );
     return;
   } catch (error) {
     console.error(error);
-    reply(req.body.response_url, errorMessage);
+    slack.reply(req.body.response_url, errorMessage);
   }
 });
 
