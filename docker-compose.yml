@@ -1,0 +1,11 @@
+version: "3"
+services:
+  slack-jc-sudo:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "80:3000"
+    environment:
+      - JUMPCLOUD_API_KEY=secret
+      - SLACK_SIGNING_SECRET=secret
