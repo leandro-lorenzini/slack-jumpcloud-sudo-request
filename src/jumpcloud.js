@@ -42,7 +42,7 @@ const getAllSudoUsers = async () => {
 };
 
 // Function updates a user Global Administrator settings
-const updateUser = async (userId, admin, slackUserId) => {
+const updateUser = async (userId, admin) => {
   try {
     const response = await axios.put(
       `https://console.jumpcloud.com/api/systemusers/${userId}`,
@@ -52,10 +52,6 @@ const updateUser = async (userId, admin, slackUserId) => {
           {
             name: "LastAdminRequest",
             value: Date.now(),
-          },
-          {
-            name: "slackUserId",
-            value: slackUserId,
           }
         ],
       },
