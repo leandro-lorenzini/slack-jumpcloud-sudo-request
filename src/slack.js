@@ -74,7 +74,6 @@ async function postMessage(userId, message) {
         },
       }
     );
-    console.log(response);
   } catch (error) {
     console.error(`Error sending message back to user: `, error);
   }
