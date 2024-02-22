@@ -9,7 +9,7 @@ const errorMessage = "Sorry, We could not process your request at this time.";
 // Called by slack command to request for admin access
 router.post("/requestAdminAccess", slack.verify, async (req, res) => {
   const { user_id, user_name, text } = req.body;
-  
+
   if (!user_name) {
     console.log("Received request without username parameter");
     return res.status(200).send(errorMessage);
@@ -24,7 +24,9 @@ router.post("/requestAdminAccess", slack.verify, async (req, res) => {
 
   res
     .status(200)
-    .send("Request has been sent. We'll notify you when an admin accepts/rejects your request.");
+    .send(
+      "Request has been sent. We'll notify you when an admin accepts/rejects your request."
+    );
 
   try {
     const userData = await jumpcloud.getSystemUserByUsername(user_name);
@@ -65,39 +67,37 @@ router.post("/setAdminAccess", slack.verify, async (req, res) => {
       return;
     }
 
-    for (let attr of userData.results[0].attributes) {
-      if (attr.name === "slackUserId") {
-        const slackUserId = attr.value;
-      }
-    }
-    if (!slackUserId) {
-      console.log("Could not find Slack User Id");
-      return res.status(200).send(errorMessage);
-    }
-    
     const userId = userData.results[0]._id;
     if (payload.actions[0].action_id === "allow") {
-      jumpcloud.updateUser(userId, true, slackUserId);
+      jumpcloud.updateUser(userId, true);
       slack.reply(
         payload.response_url,
         `<@${payload.user.username}> has granted admin access to devices assigned to *${user_name}* for a period of 30 minutes.`
       );
 
-      slack.postMessage(
-        slackUserId,
-        `Admin access to your device(s) has been granted by <@${payload.user.username}> for 30 minutes.`
-      );
+      for (let attr of userData.results[0].attributes) {
+        if (attr.name === "slackUserId") {
+          slack.postMessage(
+            attr["value"],
+            `Admin access to your device(s) has been granted by <@${payload.user.username}> for 30 minutes.`
+          );
+        }
+      }
     } else {
-      jumpcloud.updateUser(userId, false, slackUserId);
+      jumpcloud.updateUser(userId, false);
       slack.reply(
         payload.response_url,
         `<${payload.user.username}> has denied admin access to <@${user_name}> on his/her device(s)`
       );
 
-      slack.postMessage(
-        slackUserId,
-        `<@${payload.user.username}> has denied admin access to your devices.`
-      );
+      for (let attr of userData.results[0].attributes) {
+        if (attr.name === "slackUserId") {
+          slack.postMessage(
+            attr["value"],
+            `<@${payload.user.username}> has denied admin access to your devices.`
+          );
+        }
+      }
     }
     return;
   } catch (error) {
