@@ -49,19 +49,9 @@ router.post("/requestAdminAccess", slack.verify, async (req, res) => {
 router.post("/setAdminAccess", slack.verify, async (req, res) => {
   const payload = JSON.parse(req.body.payload);
   const user_name = payload.actions[0].value;
-  for (let attr of userData.results[0].attributes) {
-    if (attr.name === "slackUserId") {
-      const slackUserId = attr.value;
-    }
-  }
 
   if (!user_name) {
     console.log("Received request without username parameter");
-    return res.status(200).send(errorMessage);
-  }
-
-  if (!slackUserId) {
-    console.log("Could not find Slack User Id");
     return res.status(200).send(errorMessage);
   }
 
@@ -73,6 +63,16 @@ router.post("/setAdminAccess", slack.verify, async (req, res) => {
         "Username could not be found, or the user's slack username does not match with a valid JumpCloud user"
       );
       return;
+    }
+
+    for (let attr of userData.results[0].attributes) {
+      if (attr.name === "slackUserId") {
+        const slackUserId = attr.value;
+      }
+    }
+    if (!slackUserId) {
+      console.log("Could not find Slack User Id");
+      return res.status(200).send(errorMessage);
     }
     
     const userId = userData.results[0]._id;
