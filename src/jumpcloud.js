@@ -33,7 +33,7 @@ const getAllSudoUsers = async () => {
         },
       }
     );
-    return response.data && response.data.results ? 
+    return response.data && response.data.results ?
       response.data.results : [];
   } catch (error) {
     console.error("Error fetching user data:", error);
@@ -42,7 +42,7 @@ const getAllSudoUsers = async () => {
 };
 
 // Function updates a user Global Administrator settings
-const updateUser = async (userId, admin) => {
+const updateUser = async (userId, admin, slackUserId) => {
   try {
     const response = await axios.put(
       `https://console.jumpcloud.com/api/systemusers/${userId}`,
@@ -52,6 +52,38 @@ const updateUser = async (userId, admin) => {
           {
             name: "LastAdminRequest",
             value: Date.now(),
+          },
+          {
+            name: "slackUserId",
+            value: slackUserId,
+          }
+        ],
+      },
+      {
+        headers: {
+          "x-api-key": process.env.JUMPCLOUD_API_KEY,
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error updating user:", error);
+    throw error;
+  }
+};
+
+// Function updates a the user attributes setSlackUserId
+const setSlackUserId = async (userId, slackUserId) => {
+  try {
+    const response = await axios.put(
+      `https://console.jumpcloud.com/api/systemusers/${userId}`,
+      {
+        attributes: [
+          {
+            name: "slackUserId",
+            value: slackUserId,
           },
         ],
       },
@@ -70,4 +102,4 @@ const updateUser = async (userId, admin) => {
   }
 };
 
-module.exports = { getSystemUserByUsername, updateUser, getAllSudoUsers };
+module.exports = { getSystemUserByUsername, updateUser, getAllSudoUsers, setSlackUserId };
