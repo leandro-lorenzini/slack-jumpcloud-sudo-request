@@ -3,7 +3,7 @@ Responds to a slack command "eg. /admin" to grant users admin/sudo rights for 30
 
 ### How to use it
 #### Slack setup
-- Create a Slack App (You can also use ean existing one)
+- Create a Slack App
 - Create a new command under the app with the following parameters:
     - Command: /admin (You can use any name you want)
     - Request URL: http://YourServerAddress/requestAdminAccess
