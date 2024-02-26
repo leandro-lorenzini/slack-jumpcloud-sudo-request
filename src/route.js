@@ -87,7 +87,7 @@ router.post("/setAdminAccess", slack.verify, async (req, res) => {
       jumpcloud.updateUser(userId, false);
       slack.reply(
         payload.response_url,
-        `<${payload.user.username}> has denied admin access to <@${user_name}> on his/her device(s)`
+        `<@${payload.user.username}> has denied admin access to <@${user_name}> on his/her device(s)`
       );
 
       for (let attr of userData.results[0].attributes) {
