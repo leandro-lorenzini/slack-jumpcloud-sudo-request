@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: slack-jc-sudo
+  labels:
+    app: slack-jc-sudo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: slack-jc-sudo
+  template:
+    metadata:
+      labels:
+        app: slack-jc-sudo
+    spec:
+      containers:
+      - name: slack-jc-sudo
+        image: leandrolorenzini/slack-jumpcloud-sudo-request:1.0
+        ports:
+        - containerPort: 3000
+        env:
+        - name: JUMPCLOUD_API_KEY
+          value: ""
+        - name: SLACK_SIGNING_SECRET
+          value: ""
+        - name: SLACK_BOT_USER_TOKEN
+          value: ""
+        - name: SLACK_ADMIN_CHANNEL
+          value: ""
+        restartPolicy: OnFailure
