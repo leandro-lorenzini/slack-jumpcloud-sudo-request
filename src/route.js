@@ -55,7 +55,7 @@ router.post("/setAdminAccess", slack.verify, async (req, res) => {
   if (payload.user.username === user_name) {
     slack.reply(
       payload.response_url,
-      "You cannot approve your own request for admin access."
+      `<@${payload.user.username}>, you cannot approve your own request for admin access.`
     );
     return
   }
