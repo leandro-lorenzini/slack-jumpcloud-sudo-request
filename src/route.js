@@ -52,6 +52,14 @@ router.post("/setAdminAccess", slack.verify, async (req, res) => {
   const payload = JSON.parse(req.body.payload);
   const user_name = payload.actions[0].value;
 
+  if (payload.user.username === user_name) {
+    slack.reply(
+      payload.response_url,
+      "You cannot approve your own request for admin access."
+    );
+    return
+  }
+
   if (!user_name) {
     console.log("Received request without username parameter");
     return res.status(200).send(errorMessage);
